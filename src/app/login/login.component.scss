@@ -1,0 +1,65 @@
+h2 {
+    margin-top: 10px;
+    text-align: center;
+    font-family: sans-serif;
+  }
+  
+  .login-form-container {
+    padding: 70px 0;
+  }
+  
+  body {
+    background-color: #808080;
+  }
+  
+  form {
+    margin-top: 50px;
+    background-color: #ffffff;
+    padding: 20px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    align-items: center;
+    margin-left: 10%;
+    margin-right: 10%;
+    flex-direction: column;
+    display: flex;
+    height: 600px;
+    padding-top: 100px;
+  }
+  
+  div {
+    margin-bottom: 10px;
+  }
+  
+  label {
+    display: block;
+    margin-bottom: 5px;
+  }
+  
+  input {
+    padding: 5px;
+    width: 100%; /* Make the input width 100% of its container */
+    height: 30px;
+  }
+  
+  .icon {
+    width: 100px; /* Adjust the size as needed */
+    height: 100px; /* Adjust the size as needed */
+    background-image: url("./login_assets/logo.png");
+    background-repeat: no-repeat;
+    background-size: contain; /* Ensure the image fits inside the container */
+    margin: 0 auto; /* Center the logo horizontally */
+  }
+  
+  
+  a {
+    margin-top: 20px;
+  }
+  
+  /* Add a media query for smaller screens (adjust max-width as needed) */
+  @media (max-width: 768px) {
+    input {
+      width: 90%; /* Adjust the width for smaller screens */
+    }
+  }
+  

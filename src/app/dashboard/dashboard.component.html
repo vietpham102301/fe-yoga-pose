@@ -1,0 +1,24 @@
+<div class="dashboard" style="margin-bottom: 20px;">
+    <div class="left-controls">
+        <span id="icon"></span>
+        <a id="home" routerLink="/home"><b>YOGA POSE SUPPORTER</b></a>
+        <a id="dashboardLink" routerLink="/dashboard/video-stream" (click)="handleClick($event, 'dashboardLink')">Home</a>
+        <a id="savedPosesLink" routerLink="/dashboard/saved-poses" (click)="handleClick($event, 'savedPosesLink')">Saved</a>
+        <a id="posesHistoryLink" routerLink="/dashboard/poses-history" (click)="handleClick($event, 'posesHistoryLink')">History</a>
+        <a routerLink="/setting">Setting</a>
+    </div>
+
+    <div class="right-controls">
+        <div class="profile-button-wrapper" [matMenuTriggerFor]="menu">
+            <a id="admin">Viet Pham</a>
+            <mat-menu #menu="matMenu" class="mat-menu">
+                <button mat-menu-item routerLink="/profile">Profile</button>
+                <button mat-menu-item (click)="logout()">Logout</button>
+              </mat-menu>
+        </div>
+      </div>
+
+</div>
+
+
+<router-outlet></router-outlet>

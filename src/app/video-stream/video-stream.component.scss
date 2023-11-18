@@ -1,0 +1,43 @@
+body {
+    background-color: #808080;
+    margin: 0;
+    padding: 0;
+}
+
+.navbar {
+    margin-bottom: 20px; /* Add margin to separate from content */
+}
+
+.container {
+    margin-top: 20px; /* Add margin to separate from the navbar */
+}
+
+h3, h4 {
+    text-align: center;
+}
+
+video, canvas {
+    width: 100%;
+}
+
+.form-group {
+    margin-top: 10px;
+}
+
+input[type="file"] {
+    width: 100%;
+}
+
+#poseScore {
+    font-weight: bold;
+    font-size: 24px;
+    color: #007bff;
+    text-align: center;
+}
+
+.matching-video-size {
+    display: block;
+    margin: 0 auto;
+    max-width: 100%; /* Ensure the image does not exceed the video's width */
+    height: 476px;    /* Allow height to adjust proportionally */
+  }
