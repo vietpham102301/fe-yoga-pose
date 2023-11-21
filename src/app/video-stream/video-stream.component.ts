@@ -2,6 +2,7 @@ import { Component, OnInit, ElementRef, ViewChild, OnDestroy, AfterViewInit, Cha
 import { WebsocketService } from '../websocket-service/web-socket.service';
 import { Subscription } from 'rxjs';
 import { PredictedResponse } from '../websocket-service/models/predicted-response';
+import { VIDEO_URL } from './constants/constant';
 
 @Component({
   selector: 'app-video-stream',
@@ -58,7 +59,7 @@ export class VideoStreamComponent implements OnInit, OnDestroy, AfterViewInit {
     
     this.context = canvas.getContext('2d');
   
-    this.websocketService.connect('ws://localhost:8080/api/v1/users/ws-video');
+    this.websocketService.connect(VIDEO_URL);
     
     
     navigator.mediaDevices.getUserMedia({ video: true })
