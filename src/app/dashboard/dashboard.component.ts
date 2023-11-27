@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
-// import { AuthService } from '../auth/auth.service';
+import { AuthService } from '../auth/auth.service';
 
 @Component({
   selector: 'app-dashboard',
@@ -10,7 +10,7 @@ import { Router } from '@angular/router';
 export class DashboardComponent implements OnInit {
 
 
-  constructor(private router: Router){}
+  constructor(private router: Router, private authService: AuthService){}
 
   username: any;
 
@@ -51,11 +51,11 @@ export class DashboardComponent implements OnInit {
 
 
   logout() {
-    // this.authService.logout();
+    this.authService.logout();
   }
 
   openInitialPage(){
-    this.router.navigate(["/dashboard/video-stream"]);
+    this.router.navigate(["/home/video-stream"]);
   }
 
   

@@ -6,15 +6,16 @@
             </div>
             <div class="form-group">
             <label for="username">Username:</label>
-            <input type="text" id="username" name="username" class="form-control" placeholder="Enter your email or phone number" [(ngModel)]="username">
+            <input type="text" id="username" name="username" class="form-control" placeholder="Enter your username" [(ngModel)]="username">
             </div>
             <div class="form-group">
             <label for="password">Password:</label>
             <input type="password" id="password" name="password" class="form-control" placeholder="Enter your password" [(ngModel)]="password">
             </div>
-            <div class="error-message">{{ errorMessage }}</div>
+            <div class="error-message" style="color: red;">{{ errorMessage }}</div>
             <button type="button" class="btn btn-primary" (click)="login()">Login</button>
             <a href="https://google.com">Forgot your password?</a>
+            <a href="http://localhost:4200/register">Register an account</a>
     </form>
   </div>
   

@@ -2,7 +2,8 @@ import { Component, OnInit, ElementRef, ViewChild, OnDestroy, AfterViewInit, Cha
 import { WebsocketService } from '../websocket-service/web-socket.service';
 import { Subscription } from 'rxjs';
 import { PredictedResponse } from '../websocket-service/models/predicted-response';
-import { VIDEO_URL } from './constants/constant';
+import { IMAGE_URL, VIDEO_URL } from './constants/constant';
+import { Router, NavigationStart } from '@angular/router'; 
 
 @Component({
   selector: 'app-video-stream',
@@ -21,6 +22,12 @@ export class VideoStreamComponent implements OnInit, OnDestroy, AfterViewInit {
   private counterInterval: any;
   private isRecieved: boolean = false;
   private isFirstPose: boolean = true;
+  public imageUrl: string = "http://localhost:8080/api/v1/yoga/pose?poseName=anjaneyasana";
+  public score: number = 0;
+  private isProcessing: boolean = false;
+  private threshold: number = 0.5;
+  private isTriggerFromPause: boolean = false;
+  private componentActive = true;
 
 
   private scheduleFrameCapture(): void {
@@ -29,19 +36,40 @@ export class VideoStreamComponent implements OnInit, OnDestroy, AfterViewInit {
     }, 10000);
   }
 
-  constructor(private websocketService: WebsocketService, private cdr: ChangeDetectorRef,) {
+  constructor(private websocketService: WebsocketService, private cdr: ChangeDetectorRef, private router: Router) {
     this.jsonMessageSubscription = this.websocketService.getJSONMessageObservable().subscribe((data: PredictedResponse) => {
+      this.imageUrl = IMAGE_URL + data.predicted_class;
+      console.log('Updated imageUrl:', this.imageUrl);
       this.predictedResponse = data;
-      this.textToSpeech();
+      if (this.predictedResponse.confidence < this.threshold) {
+        this.textToSpeechPoseNotDetected();
+
+      }else {
+        this.textToSpeech();
+      }
       this.textToSpeechNextPose();
+      this.isProcessing = false;
+      
+      
       setTimeout(() => {
         clearInterval(this.counterInterval);
         this.counter = 10;
         this.isRecieved = true;
         this.startUpdating();
         this.scheduleFrameCapture();
-      }, 7000);
-      this.cdr.detectChanges();
+      }, 10000);
+      
+      if(this.isTriggerFromPause){
+        this.isTriggerFromPause = false;
+        return;
+      }
+
+    });
+
+    this.router.events.subscribe((event) => {
+      if (event instanceof NavigationStart) {
+        this.handleNavigationStart();
+      }
     });
    
   }
@@ -69,7 +97,18 @@ export class VideoStreamComponent implements OnInit, OnDestroy, AfterViewInit {
         video.addEventListener('play', () => {
           canvas.width = video.videoWidth;
           canvas.height = video.videoHeight;
-          this.captureAndSendFrame();
+          if (this.isFirstPose && !this.isProcessing) {
+            this.captureAndSendFrame();
+            this.isProcessing = true;
+          }else{
+            if(!this.isProcessing && !this.isTriggerFromPause){
+              this.isProcessing = true;
+              setTimeout(() => {
+                this.captureAndSendFrame();
+              }, this.counter * 1000);
+            }
+          }
+          
         });
       })
       .catch((error) => {
@@ -78,16 +117,21 @@ export class VideoStreamComponent implements OnInit, OnDestroy, AfterViewInit {
   }
 
   private startUpdating(): void {
+    if(!this.componentActive){
+      return;
+    }
     this.counterInterval = setInterval(() => {
       this.updateCounter();
       this.cdr.detectChanges();
     }, 1000);
+
   }
 
   private updateCounter(): void {
-    if ((!this.isStreamPaused && this.isRecieved) || this.isFirstPose) {
+    if ((!this.isStreamPaused && this.isRecieved) || (this.isFirstPose && !this.isStreamPaused)) {
       if (this.counter > 0) {
         this.counter -= 1;
+        this.textToSpeechCounting();
       } else {
         this.isRecieved = false;
         this.counter = 10;
@@ -99,10 +143,10 @@ export class VideoStreamComponent implements OnInit, OnDestroy, AfterViewInit {
   
   private textToSpeech(): void {
     if (this.predictedResponse && this.predictedResponse.predicted_class) {
+      this.score = Math.trunc(this.predictedResponse.confidence * 10);
       const predicted_pose = new SpeechSynthesisUtterance("Predicted Pose is " + this.predictedResponse.predicted_class);
       const score = new SpeechSynthesisUtterance("Score is " + Math.trunc(this.predictedResponse.confidence * 10));
       
-      // Uncomment the following line if you want to set specific options for the speech synthesis
       predicted_pose.voice = speechSynthesis.getVoices()[0];
       score.voice = speechSynthesis.getVoices()[0];
   
@@ -119,6 +163,9 @@ export class VideoStreamComponent implements OnInit, OnDestroy, AfterViewInit {
   }
 
   private textToSpeechNotifyProcessing(): void {
+      if(!this.componentActive){
+        return;
+      }
       const notify = new SpeechSynthesisUtterance("Processing the pose, please wait!");
       speechSynthesis.speak(notify);
   }
@@ -126,7 +173,21 @@ export class VideoStreamComponent implements OnInit, OnDestroy, AfterViewInit {
   private textToSpeechNotifyFirstPoseTaken(): void {
     const notify = new SpeechSynthesisUtterance("The first pose will be taken in 10 seconds");
     speechSynthesis.speak(notify);
-}
+  }
+
+  private textToSpeechCounting(): void {
+    const notify = new SpeechSynthesisUtterance(this.counter.toString());
+    speechSynthesis.speak(notify);
+  }
+  private textToSpeechPoseNotDetected(): void {
+    const notify = new SpeechSynthesisUtterance("Un-recoginized pose, please try again! Make sure you are in the frame. Copy the pose from the image if you are not sure.");
+    speechSynthesis.speak(notify);
+  }
+
+  private textToSpeechCannotPauseTheFirstPose(): void {
+    const notify = new SpeechSynthesisUtterance("Cannot pause the first pose");
+    speechSynthesis.speak(notify);
+  }
 
 
   private captureAndSendFrame(): void {
@@ -153,11 +214,13 @@ export class VideoStreamComponent implements OnInit, OnDestroy, AfterViewInit {
               setTimeout(() => {
                 this.websocketService.send(binaryData);
                 this.textToSpeechNotifyProcessing();
-              }, 14000);
+              }, 15000);
               
             }else{
-              this.websocketService.send(binaryData);
-              this.textToSpeechNotifyProcessing();
+              setTimeout(() => {
+                this.websocketService.send(binaryData);
+                this.textToSpeechNotifyProcessing();
+              }, this.counter * 1000);
             }
             
           };
@@ -168,15 +231,20 @@ export class VideoStreamComponent implements OnInit, OnDestroy, AfterViewInit {
     }
   }
 
+
+
   toggleStream(): void {
     const video = this.videoElement.nativeElement;
-    
+    if(this.isFirstPose){
+      this.textToSpeechCannotPauseTheFirstPose();
+      return
+    }
     if (this.isStreamPaused) {
+      this.isTriggerFromPause = true;
       video.play();
     } else {
       video.pause();
     }
-
     this.isStreamPaused = !this.isStreamPaused;
   }
   
@@ -184,5 +252,23 @@ export class VideoStreamComponent implements OnInit, OnDestroy, AfterViewInit {
   ngOnDestroy(): void {
     this.websocketService.close();
     this.jsonMessageSubscription.unsubscribe();
+    this.cancelSpeech();
+    this.cleanup();
+    this.componentActive = false;
+  }
+
+  private cleanup(): void {
+    clearInterval(this.counterInterval);
+    this.cancelSpeech();
+  }
+
+  private handleNavigationStart(): void {
+    this.cleanup();
+  }
+
+  private cancelSpeech(): void {
+    if (this.componentActive) {
+      speechSynthesis.cancel();
+    }
   }
 }

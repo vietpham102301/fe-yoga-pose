@@ -12,7 +12,7 @@
                       </button>
                     <h4>Time until next pose: {{counter}}</h4>
                     <h4>Predicted Pose: <span *ngIf="predictedResponse">{{predictedResponse.predicted_class}}</span></h4>
-                    <p style="text-align: center;">Score: <span *ngIf="predictedResponse" id="poseScore">{{predictedResponse.confidence}}</span></p>
+                    <p style="text-align: center;">Score: <span *ngIf="predictedResponse" id="poseScore">{{score}}</span></p>
                 </div>
             </div>
         </div>
@@ -20,13 +20,18 @@
             <div class="row">
                 <div class="col-lg-12">
                     <h4 style="margin-bottom: 20px; font-weight: bold;" >Sample Pose</h4>
-                    <img src="../../assets/Virasana_Yoga-Asana_Nina-Mel.jpg" alt="virasana" #imageElement class="matching-video-size">
+                    <img [src]="imageUrl" alt="pose_image" #imageElement class="matching-video-size">
                 </div>
             </div>
             <div class="row mt-4">
-                <div>
-                    <h4>Virasana</h4>
-                </div>
+                <div *ngIf="predictedResponse; else noPrediction">
+                    <h4>{{predictedResponse.predicted_class}}</h4>
+                  </div>
+                  <ng-template #noPrediction>
+                    <div>
+                      <h4>anjaneyasana</h4>
+                    </div>
+                  </ng-template>
             </div>
         </div>
     </div>

@@ -1,12 +1,14 @@
 import { Injectable } from '@angular/core';
 import { Subject } from 'rxjs';
 import { PredictedResponse } from './models/predicted-response';
+import {HttpHeaders } from '@angular/common/http'
 @Injectable({
   providedIn: 'root'
 })
 export class WebsocketService {
   private ws!: WebSocket;
   private messageSubject = new Subject<PredictedResponse>();
+
 
   connect(url: string): void {
     this.ws = new WebSocket(url);
