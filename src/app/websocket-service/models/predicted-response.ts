@@ -3,5 +3,6 @@ export interface PredictedResponse {
     predicted_class: string;
     confidence: number;
     execution_time: string;
+    image_path: string;
   }
   

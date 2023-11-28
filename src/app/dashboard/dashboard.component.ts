@@ -29,7 +29,7 @@ export class DashboardComponent implements OnInit {
   selectedLinkId:any;
   handleClick(event: MouseEvent, id: string) {
     if(this.count ===0){
-      this.selectedLinkId = 'dashboardLink';
+      this.selectedLinkId = 'homeLink';
       this.count++;
     }
     if (this.selectedLinkId) {

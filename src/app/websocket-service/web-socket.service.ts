@@ -1,7 +1,9 @@
-import { Injectable } from '@angular/core';
-import { Subject } from 'rxjs';
+import { Injectable, Inject } from '@angular/core';
+import { Subject, Observable, of } from 'rxjs';
 import { PredictedResponse } from './models/predicted-response';
-import {HttpHeaders } from '@angular/common/http'
+import {HttpClient, HttpHeaders } from '@angular/common/http'
+import { APP_SERVICE_CONFIG } from 'src/app/AppConfig/appconfig.service';
+import { AppConfig } from 'src/app/AppConfig/appconfig.interface';
 @Injectable({
   providedIn: 'root'
 })
@@ -9,6 +11,7 @@ export class WebsocketService {
   private ws!: WebSocket;
   private messageSubject = new Subject<PredictedResponse>();
 
+  constructor(private http: HttpClient, @Inject(APP_SERVICE_CONFIG) private config: AppConfig) { }
 
   connect(url: string): void {
     this.ws = new WebSocket(url);
@@ -56,5 +59,24 @@ export class WebsocketService {
 
   getJSONMessageObservable() {
     return this.messageSubject.asObservable();
+  }
+
+  private getHeader(): any{
+    const authToken = localStorage.getItem("token"); 
+    if(authToken !== null){
+      const headers = new HttpHeaders().set('X-Access-Token', authToken);
+      const options = { headers: headers };
+      return options
+    }
+    return null;
+  }
+
+  saveHistory(userId: number, requestBody: any): Observable<any> {
+    const options = this.getHeader();
+    if(options !== null){
+      return this.http.post<any>(this.config.apiEndpoint + `/api/v1/history/pose?userID=${userId}`, requestBody, options);
+    }
+   
+    return of([]);
   }
 }

@@ -28,5 +28,11 @@ export class VideoStreamService {
     }
     return of(false);
   }
-
+  saveHistory(poseName: string, score: number): Observable<any> {
+    const options = this.getHeader();
+    if(options !==null){
+      return this.http.post<any>(this.config.apiEndpoint + `/api/v1/history/pose?poseName=${poseName}&score=${score}`, options);
+    }
+    return of(false);
+  }
 }

@@ -1,0 +1,18 @@
+.table {
+    margin-top: 20px;
+
+    th,
+    td {
+        text-align: center;
+    }
+
+    .img-thumbnail {
+        max-width: 100px;
+        max-height: 100px;
+    }
+
+    .icon {
+        cursor: pointer;
+        margin-right: 10px;
+    }
+}

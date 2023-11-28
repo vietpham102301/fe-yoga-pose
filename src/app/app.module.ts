@@ -12,6 +12,11 @@ import { MatIconModule } from '@angular/material/icon';
 import { HttpClientModule } from '@angular/common/http';
 import { APP_CONFIG, APP_SERVICE_CONFIG } from './AppConfig/appconfig.service';
 import { RegisterComponent } from './register/register.component';
+import { HistoryComponent } from './history/history.component';
+import { ImageModalComponent } from './image-modal/image-modal.component';
+import { MatDialogModule } from '@angular/material/dialog';
+import { SavedComponent } from './saved/saved.component';
+
 
 @NgModule({
   declarations: [
@@ -19,7 +24,10 @@ import { RegisterComponent } from './register/register.component';
     VideoStreamComponent,
     LoginComponent,
     DashboardComponent,
-    RegisterComponent
+    RegisterComponent,
+    HistoryComponent,
+    ImageModalComponent,
+    SavedComponent,
   ],
   imports: [
     BrowserModule,
@@ -28,7 +36,8 @@ import { RegisterComponent } from './register/register.component';
     MatMenuModule,
     BrowserAnimationsModule,
     MatIconModule,
-    HttpClientModule
+    HttpClientModule,
+    MatDialogModule
   ],
   providers: [
     {
