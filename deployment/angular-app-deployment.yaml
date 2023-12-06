@@ -25,7 +25,7 @@ spec:
         io.kompose.service: angular-app
     spec:
       containers:
-        - image: gcr.io/yoga-pose-406917/fe-yoga-pose:v2
+        - image: gcr.io/yoga-pose-406917/fe-yoga-pose:latest
           name: angular-app
           ports:
             - containerPort: 80
