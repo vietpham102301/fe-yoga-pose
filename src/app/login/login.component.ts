@@ -16,9 +16,11 @@ export class LoginComponent {
 
   }
   login() {
+    console.log("login")
     this.authService.Authenticate(this.username, this.password).subscribe(
       {
         next: (result) => {
+          console.log("1")
           console.log(result);
           if (result) {
             if(result.status === 401){
@@ -39,6 +41,7 @@ export class LoginComponent {
           }
         },
         error: (error) => {
+          console.log("2")
           console.log(error);
         }
       }

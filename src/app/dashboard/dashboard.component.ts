@@ -54,6 +54,16 @@ export class DashboardComponent implements OnInit {
     this.authService.logout();
   }
 
+  logoutAndChangePassword(){
+    let userId = localStorage.getItem('userId');
+    let token = localStorage.getItem('token');
+
+    this.authService.logout();
+    localStorage.setItem('userId', userId || '');
+    localStorage.setItem('token', token || '');
+    this.router.navigate(["/change-password"]);
+  }
+
   openInitialPage(){
     this.router.navigate(["/home/video-stream"]);
   }

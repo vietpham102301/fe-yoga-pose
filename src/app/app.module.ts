@@ -16,6 +16,8 @@ import { HistoryComponent } from './history/history.component';
 import { ImageModalComponent } from './image-modal/image-modal.component';
 import { MatDialogModule } from '@angular/material/dialog';
 import { SavedComponent } from './saved/saved.component';
+import { ForgotPasswordComponent } from './forgot-password/forgot-password.component';
+import { ChangePasswordComponent } from './change-password/change-password.component';
 
 
 @NgModule({
@@ -28,6 +30,8 @@ import { SavedComponent } from './saved/saved.component';
     HistoryComponent,
     ImageModalComponent,
     SavedComponent,
+    ForgotPasswordComponent,
+    ChangePasswordComponent,
   ],
   imports: [
     BrowserModule,

@@ -57,7 +57,7 @@ export class AuthService {
 
   public Authenticate(username: string, password: string): Observable<any> {
     const requestBody = { username, password };
-  
+    console.log("authenticate");
     return this.http.post<any>(this.config.apiEndpoint+"/api/v1/users/login", requestBody, { observe: 'response' }).pipe(
       map((response) => {
         const headers: HttpHeaders = response.headers;

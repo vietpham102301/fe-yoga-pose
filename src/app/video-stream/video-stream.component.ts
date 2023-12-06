@@ -22,7 +22,7 @@ export class VideoStreamComponent implements OnInit, OnDestroy, AfterViewInit {
   private counterInterval: any;
   private isRecieved: boolean = false;
   private isFirstPose: boolean = true;
-  public imageUrl: string = "http://localhost:8080/api/v1/yoga/pose?poseName=anjaneyasana";
+  public imageUrl: string = "http://35.247.188.88:80/api/v1/yoga/pose?poseName=anjaneyasana";
   public score: number = 0;
   private isProcessing: boolean = false;
   private threshold: number = 0.5;

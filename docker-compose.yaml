@@ -1,0 +1,6 @@
+version: '3.1'
+services:
+  angular-app:
+    image: gcr.io/yoga-pose-406917/fe-yoga-pose:latest
+    ports:
+      - "4200:80"

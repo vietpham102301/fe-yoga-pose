@@ -8,11 +8,15 @@ import { RegisterComponent } from './register/register.component';
 import { HistoryComponent } from './history/history.component';
 import { SavedComponent } from './saved/saved.component';
 import { AuthGuard } from './auth/auth.guard';
+import { ForgotPasswordComponent } from './forgot-password/forgot-password.component';
+import { ChangePasswordComponent } from './change-password/change-password.component';
 
 const routes: Routes = [
   { path: 'login', component: LoginComponent, canActivate: [LoginGuard] },
   { path: 'register', component: RegisterComponent, canActivate: [LoginGuard] },
   { path: '', redirectTo: 'login', pathMatch: 'full' },
+  {path: 'forgot-password', component: ForgotPasswordComponent},
+  {path: 'change-password', component: ChangePasswordComponent},
   {
     path: 'home', component: DashboardComponent, canActivate:[AuthGuard],children: [
       { path: 'video-stream', component: VideoStreamComponent },
