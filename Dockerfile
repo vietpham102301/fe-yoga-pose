@@ -1,5 +1,5 @@
 # Use a multi-stage build for smaller final image
-FROM node:latest as builder
+FROM node:20.9.0 as builder
 
 WORKDIR /app
 
