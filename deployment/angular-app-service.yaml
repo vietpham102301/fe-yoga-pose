@@ -9,6 +9,7 @@ metadata:
     io.kompose.service: angular-app
   name: angular-app
 spec:
+  type: LoadBalancer
   ports:
     - name: "4200"
       port: 4200
